@@ -1,2 +1,2 @@
-# sorting_algorithms
-ALX Project: 0x1B. C - Sorting algorithms &amp; Big O
+# Sorting_algorithms
+Project on Sorting Algotrithms and Big-O time complexities
