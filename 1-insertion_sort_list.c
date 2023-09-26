@@ -1,48 +1,43 @@
 #include "sort.h"
 
 /**
- * swap_nodes - Swap two nodes in a listint_t doubly-linked list.
- * @h: A pointer to the head of the doubly-linked list.
- * @n1: A pointer to the first node to swap.
- * @n2: The second node to swap.
- */
-void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2)
-{
-	(*n1)->next = n2->next;
-	if (n2->next != NULL)
-		n2->next->prev = *n1;
-	n2->prev = (*n1)->prev;
-	n2->next = *n1;
-	if ((*n1)->prev != NULL)
-		(*n1)->prev->next = n2;
-	else
-		*h = n2;
-	(*n1)->prev = n2;
-	*n1 = n2->prev;
-}
-
-/**
  * insertion_sort_list - Sorts a doubly linked list of integers
- *                       using the insertion sort algorithm.
- * @list: A pointer to the head of a doubly-linked list of integers.
+ *                       in ascending order using insertion sort algorithm.
  *
- * Description: Prints the list after each swap.
+ * @list: Pointer to a pointer to the head of the linked list.
+ *
+ * Return: Nothing.
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *iter, *insert, *tmp;
+	/* Initializing a new list to hold the sorted nodes */
+	listint_t *current, **sorted_ptr, *sorted = NULL;
 
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
-		return;
+	if (*list == NULL || (*list)->next == NULL)
+		return; /* Guard clause if the list is empty or only has one element */
 
-	for (iter = (*list)->next; iter != NULL; iter = tmp)
+	while (*list != NULL)
 	{
-		tmp = iter->next;
-		insert = iter->prev;
-		while (insert != NULL && iter->n < insert->n)
+		current = *list;
+		sorted_ptr = &sorted;
+
+		*list = (*list)->next; /* Move to the next node in the original list */
+
+		/* Find the correct position in the sorted list to insert the current node */
+		while (*sorted_ptr != NULL && (*sorted_ptr)->n < current->n)
 		{
-			swap_nodes(list, &insert, iter);
-			print_list((const listint_t *)*list);
+			sorted_ptr = &(*sorted_ptr)->next;
 		}
+
+		/* Insert the current node into the sorted list */
+		current->next = *sorted_ptr;
+		if (*sorted_ptr != NULL)
+		{
+			(*sorted_ptr)->prev = current;
+		}
+		current->prev = *sorted_ptr;
+		*sorted_ptr = current;
 	}
+
+	*list = sorted; /* Update the original list to point to the sorted list */
 }
